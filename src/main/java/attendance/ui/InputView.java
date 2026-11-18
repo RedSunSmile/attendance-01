@@ -9,6 +9,11 @@ public class InputView {
         return Console.readLine();
     }
 
+    public String inputStartClassTime() {
+        System.out.println("등교 시간을 입력해 주세요.");
+        return Console.readLine();
+    }
+
     public String inputMenu() {
         return Console.readLine();
     }

@@ -12,6 +12,16 @@ public class OutputView {
         LocalDateTime dateTimes=DateTimes.now();
         System.out.println("오늘은 "+dateTimes.getMonthValue()+"월 "+ dateTimes.getDayOfMonth()+"일 "+dateTimes.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.KOREAN)+"입니다. 기능을 선택해 주세요.");
     }
+
+    public void printAttendance(LocalDateTime nowDate,String result) {
+        System.out.printf("%d월 %02d일 %s %s (%s)%n",
+                nowDate.getMonthValue(),
+                nowDate.getDayOfMonth(),
+                nowDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.KOREAN),
+                nowDate.toLocalTime(),
+                result);
+    }
+
     public void selectFunction() {
         System.out.println("1. 출석 확인");
         System.out.println("2. 출석 수정");
