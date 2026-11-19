@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+
 public class AttendanceController {
     private final InputView inputView = new InputView();
     private final OutputView outputView = new OutputView();
@@ -33,7 +34,22 @@ public class AttendanceController {
                 LocalDate today = DateTimes.now().toLocalDate();
                 LocalDateTime nowDate = LocalDateTime.of(today, time);
                 outputView.printAttendance(nowDate, AttendanceJudge.judge(nowDate));
+                crews.addRecord(basket, nowDate);
             }
+
+            if (input.equals("2")) {
+                String basket = inputView.inputModifyNickname();
+                crews.validNicknames(basket);
+                String day = inputView.inputModifyDay();
+                String time = inputView.inputModifyTime();
+                LocalDate date = DateTimes.now().toLocalDate().withDayOfMonth(Integer.parseInt(day));
+                LocalDateTime oldRecord = crews.findRecord(basket, date);
+
+                LocalDateTime nowDate = LocalDateTime.of(date, LocalTime.parse(time));
+                outputView.printModify(oldRecord, AttendanceJudge.judge(oldRecord), nowDate, AttendanceJudge.judge(nowDate));
+                crews.modifyRecord(basket, oldRecord, nowDate);
+            }
+
             if (input.equals("Q")) {
                 break;
             }
@@ -41,6 +57,5 @@ public class AttendanceController {
                 throw new IllegalArgumentException("[ERROR] 잘못된 형식을 입력하였습니다.");
             }
         }
-
     }
 }

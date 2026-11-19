@@ -2,6 +2,7 @@ package attendance.ui;
 
 import camp.nextstep.edu.missionutils.DateTimes;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.TextStyle;
 import java.util.Locale;
@@ -22,6 +23,27 @@ public class OutputView {
                 result);
     }
 
+    public void printModify(LocalDateTime oldRecord, String oldResult, LocalDateTime nowDate, String newResult){
+       if(oldRecord==null){
+           System.out.printf("%d월 %02d일 %s --:-- (%s) -> %s (%s) 수정 완료!%n",
+                   nowDate.getMonthValue(),
+                   nowDate.getDayOfMonth(),
+                   nowDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.KOREAN),
+                   oldResult,
+                   nowDate.toLocalTime(),
+                   newResult);
+           return;
+       }
+        System.out.printf("%d월 %02d일 %s %s (%s) -> %s (%s) 수정 완료!%n",
+                oldRecord.getMonthValue(),
+                oldRecord.getDayOfMonth(),
+                oldRecord.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.KOREAN),
+                oldRecord.toLocalTime(),
+                oldResult,
+                nowDate.toLocalTime(),
+                newResult);
+    }
+
     public void selectFunction() {
         System.out.println("1. 출석 확인");
         System.out.println("2. 출석 수정");
@@ -29,4 +51,6 @@ public class OutputView {
         System.out.println("4. 제적 위험자 확인");
         System.out.println("Q. 종료");
     }
+
+
 }
