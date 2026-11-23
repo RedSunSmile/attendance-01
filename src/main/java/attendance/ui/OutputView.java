@@ -1,5 +1,6 @@
 package attendance.ui;
 
+import camp.nextstep.edu.missionutils.Console;
 import camp.nextstep.edu.missionutils.DateTimes;
 
 import java.nio.charset.StandardCharsets;
@@ -42,6 +43,15 @@ public class OutputView {
                 oldResult,
                 nowDate.toLocalTime(),
                 newResult);
+    }
+    public void printAssignAttendance(LocalDateTime nowDate,String result){
+        System.out.println("이번 달 빙티의 출석 기록입니다.");
+        System.out.printf("%d월 %02d일 %s %s (%s)%n",
+                nowDate.getMonthValue(),
+                nowDate.getDayOfMonth(),
+                nowDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.KOREAN),
+                nowDate.toLocalTime(),
+                result);
     }
 
     public void selectFunction() {

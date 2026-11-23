@@ -9,6 +9,7 @@ import camp.nextstep.edu.missionutils.DateTimes;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 
 public class AttendanceController {
@@ -26,6 +27,31 @@ public class AttendanceController {
             outputView.selectFunction();
             InputView inputView = new InputView();
             String input = inputView.inputMenu();
+            checkAttendance(input, inputView);
+            modifyAttendance(input, inputView);
+            checkAssignAttendanceOfEachCrew(input, inputView);
+            if (input.equals("Q")) {
+                    break;
+                }
+                if (!input.equals("1") && !input.equals("2") && !input.equals("3") && !input.equals("4")) {
+                    throw new IllegalArgumentException("[ERROR] 잘못된 형식을 입력하였습니다.");
+                }
+
+        }
+    }
+
+    private void checkAssignAttendanceOfEachCrew(String input, InputView inputView) {
+        if (input.equals("3")) {
+            String basket = inputView.inputAssignOfEachCrew();
+            crews.validNicknames(basket);
+            List<LocalDateTime> dateTimes = crews.takeRecord(basket);
+            for (LocalDateTime dateTime : dateTimes) {
+                outputView.printAssignAttendance(dateTime, AttendanceJudge.judge(dateTime));
+            }
+        }
+    }
+
+    private void checkAttendance (String input, InputView inputView){
             if (input.equals("1")) {
                 String basket = inputView.inputNickName();
                 crews.validNicknames(basket);
@@ -36,7 +62,9 @@ public class AttendanceController {
                 outputView.printAttendance(nowDate, AttendanceJudge.judge(nowDate));
                 crews.addRecord(basket, nowDate);
             }
+        }
 
+        private void modifyAttendance (String input, InputView inputView){
             if (input.equals("2")) {
                 String basket = inputView.inputModifyNickname();
                 crews.validNicknames(basket);
@@ -49,13 +77,6 @@ public class AttendanceController {
                 outputView.printModify(oldRecord, AttendanceJudge.judge(oldRecord), nowDate, AttendanceJudge.judge(nowDate));
                 crews.modifyRecord(basket, oldRecord, nowDate);
             }
-
-            if (input.equals("Q")) {
-                break;
-            }
-            if (!input.equals("1") && !input.equals("2") && !input.equals("3") && !input.equals("4")) {
-                throw new IllegalArgumentException("[ERROR] 잘못된 형식을 입력하였습니다.");
-            }
         }
+
     }
-}

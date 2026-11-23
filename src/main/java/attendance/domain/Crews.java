@@ -86,5 +86,9 @@ public class Crews {
         list.add(nowDate);
     }
 
+    public List<LocalDateTime> takeRecord(String name){
+        return  records.get(name);
+    }
+
 
 }
