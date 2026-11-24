@@ -10,8 +10,6 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
-
 
 public class AttendanceController {
     private final InputView inputView = new InputView();
@@ -42,37 +40,39 @@ public class AttendanceController {
     }
 
     private void checkAssignAttendanceOfEachCrew(String input, InputView inputView) {
-        if (input.equals("3")) {
-            String basket = inputView.inputAssignOfEachCrew();
-            crews.validNicknames(basket);
-            outputView.printRecordTitle(basket);
-            int attend = 0, late = 0, absent = 0;
-            for (int day = 1; day < DateTimes.now().getDayOfMonth(); day++) {
-                LocalDate date = DateTimes.now().toLocalDate().withDayOfMonth(day);
-                if (date.getMonthValue() == 12 && day == 25) {
-                    continue;
-                }
-
-                if (date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY) {
-                    continue;
-                }
-
-                LocalDateTime record = crews.findRecord(basket, date);
-                if (record == null) {
-                    outputView.printAbsent(date);
-                    absent++;
-                    continue;
-                }
-                String result = AttendanceJudge.judge(record);
-                if (result.equals("출석")) attend++;
-                if (result.equals("지각")) late++;
-                if (result.equals("결석")) absent++;
-                outputView.printAssignAttendance(record, AttendanceJudge.judge(record));
-            }
-            outputView.printCount(attend, late, absent);
-            outputView.printTargetCrew(AttendanceJudge.judgeCrew(late, absent));
+        if (!input.equals("3")) {
+            return;
         }
+        String basket = inputView.inputAssignOfEachCrew();
+        crews.validNicknames(basket);
+        outputView.printRecordTitle(basket);
+        int attend = 0, late = 0, absent = 0;
+        for (int day = 1; day < DateTimes.now().getDayOfMonth(); day++) {
+            LocalDate date = DateTimes.now().toLocalDate().withDayOfMonth(day);
+            if (date.getMonthValue() == 12 && day == 25) {
+                continue;
+            }
+
+            if (date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY) {
+                continue;
+            }
+
+            LocalDateTime record = crews.findRecord(basket, date);
+            if (record == null) {
+                outputView.printAbsent(date);
+                absent++;
+                continue;
+            }
+            String result = AttendanceJudge.judge(record);
+            if (result.equals("출석")) attend++;
+            if (result.equals("지각")) late++;
+            if (result.equals("결석")) absent++;
+            outputView.printAssignAttendance(record, AttendanceJudge.judge(record));
+        }
+        outputView.printCount(attend, late, absent);
+        outputView.printTargetCrew(AttendanceJudge.judgeCrew(late, absent));
     }
+
 
     private void checkAttendance(String input, InputView inputView) {
         if (input.equals("1")) {
