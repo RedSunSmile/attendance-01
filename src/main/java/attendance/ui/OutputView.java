@@ -4,18 +4,19 @@ import camp.nextstep.edu.missionutils.Console;
 import camp.nextstep.edu.missionutils.DateTimes;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.TextStyle;
 import java.util.Locale;
 
 public class OutputView {
 
-    public void printFunction(){
-        LocalDateTime dateTimes=DateTimes.now();
-        System.out.println("오늘은 "+dateTimes.getMonthValue()+"월 "+ dateTimes.getDayOfMonth()+"일 "+dateTimes.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.KOREAN)+"입니다. 기능을 선택해 주세요.");
+    public void printFunction() {
+        LocalDateTime dateTimes = DateTimes.now();
+        System.out.println("오늘은 " + dateTimes.getMonthValue() + "월 " + dateTimes.getDayOfMonth() + "일 " + dateTimes.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.KOREAN) + "입니다. 기능을 선택해 주세요.");
     }
 
-    public void printAttendance(LocalDateTime nowDate,String result) {
+    public void printAttendance(LocalDateTime nowDate, String result) {
         System.out.printf("%d월 %02d일 %s %s (%s)%n",
                 nowDate.getMonthValue(),
                 nowDate.getDayOfMonth(),
@@ -24,17 +25,17 @@ public class OutputView {
                 result);
     }
 
-    public void printModify(LocalDateTime oldRecord, String oldResult, LocalDateTime nowDate, String newResult){
-       if(oldRecord==null){
-           System.out.printf("%d월 %02d일 %s --:-- (%s) -> %s (%s) 수정 완료!%n",
-                   nowDate.getMonthValue(),
-                   nowDate.getDayOfMonth(),
-                   nowDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.KOREAN),
-                   oldResult,
-                   nowDate.toLocalTime(),
-                   newResult);
-           return;
-       }
+    public void printModify(LocalDateTime oldRecord, String oldResult, LocalDateTime nowDate, String newResult) {
+        if (oldRecord == null) {
+            System.out.printf("%d월 %02d일 %s --:-- (%s) -> %s (%s) 수정 완료!%n",
+                    nowDate.getMonthValue(),
+                    nowDate.getDayOfMonth(),
+                    nowDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.KOREAN),
+                    oldResult,
+                    nowDate.toLocalTime(),
+                    newResult);
+            return;
+        }
         System.out.printf("%d월 %02d일 %s %s (%s) -> %s (%s) 수정 완료!%n",
                 oldRecord.getMonthValue(),
                 oldRecord.getDayOfMonth(),
@@ -44,14 +45,38 @@ public class OutputView {
                 nowDate.toLocalTime(),
                 newResult);
     }
-    public void printAssignAttendance(LocalDateTime nowDate,String result){
-        System.out.println("이번 달 빙티의 출석 기록입니다.");
+
+    public void printRecordTitle(String nickname) {
+        System.out.println("이번 달 " + nickname + "의 출석 기록입니다.");
+    }
+
+    public void printCount(int attend, int late, int absent) {
+        System.out.println("출석: " + attend + "회");
+        System.out.println("지각: " + late + "회");
+        System.out.println("결석: " + absent + "회");
+    }
+
+    public void printAssignAttendance(LocalDateTime nowDate, String result) {
         System.out.printf("%d월 %02d일 %s %s (%s)%n",
                 nowDate.getMonthValue(),
                 nowDate.getDayOfMonth(),
                 nowDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.KOREAN),
                 nowDate.toLocalTime(),
                 result);
+    }
+
+    public void printAbsent(LocalDate date) {
+        System.out.printf("%d월 %02d일 %s --:-- (결석)%n",
+                date.getMonthValue(),
+                date.getDayOfMonth(),
+                date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.KOREAN));
+    }
+
+    public void printTargetCrew(String judge) {
+        if (judge.isEmpty()) {
+            return;
+        }
+        System.out.println(judge+" 대상자입니다.");
     }
 
     public void selectFunction() {

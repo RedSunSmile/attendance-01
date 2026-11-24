@@ -6,6 +6,7 @@ import attendance.ui.InputView;
 import attendance.ui.OutputView;
 import camp.nextstep.edu.missionutils.DateTimes;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -31,11 +32,11 @@ public class AttendanceController {
             modifyAttendance(input, inputView);
             checkAssignAttendanceOfEachCrew(input, inputView);
             if (input.equals("Q")) {
-                    break;
-                }
-                if (!input.equals("1") && !input.equals("2") && !input.equals("3") && !input.equals("4")) {
-                    throw new IllegalArgumentException("[ERROR] 잘못된 형식을 입력하였습니다.");
-                }
+                break;
+            }
+            if (!input.equals("1") && !input.equals("2") && !input.equals("3") && !input.equals("4")) {
+                throw new IllegalArgumentException("[ERROR] 잘못된 형식을 입력하였습니다.");
+            }
 
         }
     }
@@ -44,39 +45,61 @@ public class AttendanceController {
         if (input.equals("3")) {
             String basket = inputView.inputAssignOfEachCrew();
             crews.validNicknames(basket);
-            List<LocalDateTime> dateTimes = crews.takeRecord(basket);
-            for (LocalDateTime dateTime : dateTimes) {
-                outputView.printAssignAttendance(dateTime, AttendanceJudge.judge(dateTime));
+            outputView.printRecordTitle(basket);
+            int attend = 0, late = 0, absent = 0;
+            for (int day = 1; day < DateTimes.now().getDayOfMonth(); day++) {
+                LocalDate date = DateTimes.now().toLocalDate().withDayOfMonth(day);
+                if (date.getMonthValue() == 12 && day == 25) {
+                    continue;
+                }
+
+                if (date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY) {
+                    continue;
+                }
+
+                LocalDateTime record = crews.findRecord(basket, date);
+                if (record == null) {
+                    outputView.printAbsent(date);
+                    absent++;
+                    continue;
+                }
+                String result = AttendanceJudge.judge(record);
+                if (result.equals("출석")) attend++;
+                if (result.equals("지각")) late++;
+                if (result.equals("결석")) absent++;
+                outputView.printAssignAttendance(record, AttendanceJudge.judge(record));
             }
+            outputView.printCount(attend, late, absent);
+            outputView.printTargetCrew(AttendanceJudge.judgeCrew(late, absent));
         }
     }
 
-    private void checkAttendance (String input, InputView inputView){
-            if (input.equals("1")) {
-                String basket = inputView.inputNickName();
-                crews.validNicknames(basket);
-                String timeInput = inputView.inputStartClassTime();
-                LocalTime time = LocalTime.parse(timeInput);
-                LocalDate today = DateTimes.now().toLocalDate();
-                LocalDateTime nowDate = LocalDateTime.of(today, time);
-                outputView.printAttendance(nowDate, AttendanceJudge.judge(nowDate));
-                crews.addRecord(basket, nowDate);
-            }
+    private void checkAttendance(String input, InputView inputView) {
+        if (input.equals("1")) {
+            String basket = inputView.inputNickName();
+            crews.validNicknames(basket);
+            String timeInput = inputView.inputStartClassTime();
+            LocalTime time = LocalTime.parse(timeInput);
+            LocalDate today = DateTimes.now().toLocalDate();
+            LocalDateTime nowDate = LocalDateTime.of(today, time);
+            outputView.printAttendance(nowDate, AttendanceJudge.judge(nowDate));
+            crews.addRecord(basket, nowDate);
         }
-
-        private void modifyAttendance (String input, InputView inputView){
-            if (input.equals("2")) {
-                String basket = inputView.inputModifyNickname();
-                crews.validNicknames(basket);
-                String day = inputView.inputModifyDay();
-                String time = inputView.inputModifyTime();
-                LocalDate date = DateTimes.now().toLocalDate().withDayOfMonth(Integer.parseInt(day));
-                LocalDateTime oldRecord = crews.findRecord(basket, date);
-
-                LocalDateTime nowDate = LocalDateTime.of(date, LocalTime.parse(time));
-                outputView.printModify(oldRecord, AttendanceJudge.judge(oldRecord), nowDate, AttendanceJudge.judge(nowDate));
-                crews.modifyRecord(basket, oldRecord, nowDate);
-            }
-        }
-
     }
+
+    private void modifyAttendance(String input, InputView inputView) {
+        if (input.equals("2")) {
+            String basket = inputView.inputModifyNickname();
+            crews.validNicknames(basket);
+            String day = inputView.inputModifyDay();
+            String time = inputView.inputModifyTime();
+            LocalDate date = DateTimes.now().toLocalDate().withDayOfMonth(Integer.parseInt(day));
+            LocalDateTime oldRecord = crews.findRecord(basket, date);
+
+            LocalDateTime nowDate = LocalDateTime.of(date, LocalTime.parse(time));
+            outputView.printModify(oldRecord, AttendanceJudge.judge(oldRecord), nowDate, AttendanceJudge.judge(nowDate));
+            crews.modifyRecord(basket, oldRecord, nowDate);
+        }
+    }
+
+}
