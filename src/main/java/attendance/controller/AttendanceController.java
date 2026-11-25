@@ -67,7 +67,7 @@ public class AttendanceController {
             if (result.equals("출석")) attend++;
             if (result.equals("지각")) late++;
             if (result.equals("결석")) absent++;
-            outputView.printAssignAttendance(record, AttendanceJudge.judge(record));
+            outputView.printAssignAttendance(record, result);
         }
         outputView.printCount(attend, late, absent);
         outputView.printTargetCrew(AttendanceJudge.judgeCrew(late, absent));
