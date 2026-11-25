@@ -1,5 +1,6 @@
 package attendance.controller;
 
+import attendance.domain.AttendanceCount;
 import attendance.domain.AttendanceJudge;
 import attendance.domain.Crews;
 import attendance.ui.InputView;
@@ -29,6 +30,7 @@ public class AttendanceController {
             checkAttendance(input, inputView);
             modifyAttendance(input, inputView);
             checkAssignAttendanceOfEachCrew(input, inputView);
+            checkCrewOfBeingAbleToOut(input, inputView);
             if (input.equals("Q")) {
                 break;
             }
@@ -36,6 +38,22 @@ public class AttendanceController {
                 throw new IllegalArgumentException("[ERROR] 잘못된 형식을 입력하였습니다.");
             }
 
+        }
+    }
+
+    private void checkCrewOfBeingAbleToOut(String input, InputView inputView) {
+        if (!input.equals("4")) {
+            return;
+        }
+        outputView.printResultRiskCrew();
+        for (String nickName : crews.takeNickname()) {
+
+            AttendanceCount count = crews.countAttendance(nickName);
+            String grade = AttendanceJudge.judgeCrew(count.takeLate(), count.takeAbsent());
+            if(grade.isEmpty()){
+                continue;
+            }
+            outputView.printRiskCrew(nickName, count.takeAbsent(), count.takeLate(), grade);
         }
     }
 

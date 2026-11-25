@@ -56,6 +56,14 @@ public class OutputView {
         System.out.println("결석: " + absent + "회");
     }
 
+    public void printResultRiskCrew() {
+        System.out.println("제적 위험자 조회 결과");
+    }
+
+    public void printRiskCrew(String nickname, int absent, int late, String grade) {
+        System.out.println("- " + nickname + ": " + "결석 " + absent + "회, " + "지각 " + late + "회 (" + grade + ")");
+    }
+
     public void printAssignAttendance(LocalDateTime nowDate, String result) {
         System.out.printf("%d월 %02d일 %s %s (%s)%n",
                 nowDate.getMonthValue(),
@@ -76,7 +84,7 @@ public class OutputView {
         if (judge.isEmpty()) {
             return;
         }
-        System.out.println(judge+" 대상자입니다.");
+        System.out.println(judge + " 대상자입니다.");
     }
 
     public void selectFunction() {
@@ -86,6 +94,4 @@ public class OutputView {
         System.out.println("4. 제적 위험자 확인");
         System.out.println("Q. 종료");
     }
-
-
 }
