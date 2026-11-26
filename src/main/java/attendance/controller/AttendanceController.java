@@ -1,8 +1,8 @@
 package attendance.controller;
 
-import attendance.domain.AttendanceCount;
 import attendance.domain.AttendanceJudge;
 import attendance.domain.Crews;
+import attendance.domain.RiskCrew;
 import attendance.ui.InputView;
 import attendance.ui.OutputView;
 import camp.nextstep.edu.missionutils.DateTimes;
@@ -11,9 +11,9 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 public class AttendanceController {
-    private final InputView inputView = new InputView();
     private final OutputView outputView = new OutputView();
     private Crews crews;
 
@@ -22,6 +22,7 @@ public class AttendanceController {
     }
 
     public void run() {
+
         while (true) {
             outputView.printFunction();
             outputView.selectFunction();
@@ -30,7 +31,7 @@ public class AttendanceController {
             checkAttendance(input, inputView);
             modifyAttendance(input, inputView);
             checkAssignAttendanceOfEachCrew(input, inputView);
-            checkCrewOfBeingAbleToOut(input, inputView);
+            checkCrewOfBeingAbleToOut(input);
             if (input.equals("Q")) {
                 break;
             }
@@ -41,19 +42,14 @@ public class AttendanceController {
         }
     }
 
-    private void checkCrewOfBeingAbleToOut(String input, InputView inputView) {
+    private void checkCrewOfBeingAbleToOut(String input) {
         if (!input.equals("4")) {
             return;
         }
         outputView.printResultRiskCrew();
-        for (String nickName : crews.takeNickname()) {
-
-            AttendanceCount count = crews.countAttendance(nickName);
-            String grade = AttendanceJudge.judgeCrew(count.takeLate(), count.takeAbsent());
-            if(grade.isEmpty()){
-                continue;
-            }
-            outputView.printRiskCrew(nickName, count.takeAbsent(), count.takeLate(), grade);
+        List<RiskCrew> riskCrews = crews.takeRiskCrews();
+        for (RiskCrew riskCrew : riskCrews) {
+            outputView.printRiskCrew(riskCrew);
         }
     }
 
@@ -119,5 +115,4 @@ public class AttendanceController {
             crews.modifyRecord(basket, oldRecord, nowDate);
         }
     }
-
 }

@@ -1,5 +1,6 @@
 package attendance.ui;
 
+import attendance.domain.RiskCrew;
 import camp.nextstep.edu.missionutils.Console;
 import camp.nextstep.edu.missionutils.DateTimes;
 
@@ -60,8 +61,10 @@ public class OutputView {
         System.out.println("제적 위험자 조회 결과");
     }
 
-    public void printRiskCrew(String nickname, int absent, int late, String grade) {
-        System.out.println("- " + nickname + ": " + "결석 " + absent + "회, " + "지각 " + late + "회 (" + grade + ")");
+    public void printRiskCrew(RiskCrew riskCrew) {
+        System.out.println("- " + riskCrew.takeNickName()+ ": " + "결석 " +
+                riskCrew.takeAttendanceCount().takeAbsent()+ "회, " + "지각 " +
+                riskCrew.takeAttendanceCount().takeLate() + "회 (" + riskCrew.takeGrade() + ")");
     }
 
     public void printAssignAttendance(LocalDateTime nowDate, String result) {

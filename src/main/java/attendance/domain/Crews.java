@@ -9,10 +9,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Crews {
     private final List<String> nickname;
@@ -25,6 +22,24 @@ public class Crews {
 
     public List<String> takeNickname() {
         return nickname;
+    }
+
+    public List<RiskCrew> takeRiskCrews() {
+        List<RiskCrew> riskCrews = new ArrayList<>();
+        for (String nickName : takeNickname()) {
+            AttendanceCount count = countAttendance(nickName);
+            String grade = AttendanceJudge.judgeCrew(count.takeLate(), count.takeAbsent());
+            if (grade.isEmpty()) {
+                continue;
+            }
+            RiskCrew riskCrew = new RiskCrew(nickName, count, grade);
+            riskCrews.add(riskCrew);
+        }
+
+        riskCrews.sort(Comparator.comparing(RiskCrew::takeGradeOrder)
+                .thenComparing(RiskCrew::takeScore, Comparator.reverseOrder())
+                .thenComparing(RiskCrew::takeNickName));
+        return riskCrews;
     }
 
     public static List<String> readNickname() {
