@@ -37,6 +37,5 @@ public class RiskCrew {
         if (grade.equals("경고")) return 2;
 
         throw new IllegalArgumentException("[ERROR] 잘못된 형식을 입력하였습니다.");
-
     }
 }

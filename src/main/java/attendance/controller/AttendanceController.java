@@ -89,12 +89,14 @@ public class AttendanceController {
 
 
     private void checkAttendance(String input, InputView inputView) {
+        LocalDate today = DateTimes.now().toLocalDate();
         if (input.equals("1")) {
+            if (AttendanceJudge.isNotSchoolDay(today)) {
+                throw new IllegalArgumentException("[ERROR] 12월 14일 토요일은 등교일이 아닙니다.");
+            }
             String basket = inputView.inputNickName();
             crews.validNicknames(basket);
-            String timeInput = inputView.inputStartClassTime();
-            LocalTime time = LocalTime.parse(timeInput);
-            LocalDate today = DateTimes.now().toLocalDate();
+            LocalTime time = inputView.inputStartClassTime();
             LocalDateTime nowDate = LocalDateTime.of(today, time);
             outputView.printAttendance(nowDate, AttendanceJudge.judge(nowDate));
             crews.addRecord(basket, nowDate);
@@ -105,12 +107,12 @@ public class AttendanceController {
         if (input.equals("2")) {
             String basket = inputView.inputModifyNickname();
             crews.validNicknames(basket);
-            String day = inputView.inputModifyDay();
-            String time = inputView.inputModifyTime();
-            LocalDate date = DateTimes.now().toLocalDate().withDayOfMonth(Integer.parseInt(day));
+            int day = inputView.inputModifyDay();
+            LocalTime time = inputView.inputModifyTime();
+            LocalDate date = DateTimes.now().toLocalDate().withDayOfMonth(day);
             LocalDateTime oldRecord = crews.findRecord(basket, date);
 
-            LocalDateTime nowDate = LocalDateTime.of(date, LocalTime.parse(time));
+            LocalDateTime nowDate = LocalDateTime.of(date, time);
             outputView.printModify(oldRecord, AttendanceJudge.judge(oldRecord), nowDate, AttendanceJudge.judge(nowDate));
             crews.modifyRecord(basket, oldRecord, nowDate);
         }

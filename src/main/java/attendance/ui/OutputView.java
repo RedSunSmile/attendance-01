@@ -62,8 +62,8 @@ public class OutputView {
     }
 
     public void printRiskCrew(RiskCrew riskCrew) {
-        System.out.println("- " + riskCrew.takeNickName()+ ": " + "결석 " +
-                riskCrew.takeAttendanceCount().takeAbsent()+ "회, " + "지각 " +
+        System.out.println("- " + riskCrew.takeNickName() + ": " + "결석 " +
+                riskCrew.takeAttendanceCount().takeAbsent() + "회, " + "지각 " +
                 riskCrew.takeAttendanceCount().takeLate() + "회 (" + riskCrew.takeGrade() + ")");
     }
 

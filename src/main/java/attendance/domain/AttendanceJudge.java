@@ -1,6 +1,9 @@
 package attendance.domain;
 
+import camp.nextstep.edu.missionutils.DateTimes;
+
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -40,5 +43,11 @@ public class AttendanceJudge {
             return "경고";
         }
         return "";
+    }
+
+    public static boolean isNotSchoolDay(LocalDate today) {
+        return today.getDayOfWeek() == DayOfWeek.SATURDAY
+                || today.getDayOfWeek() == DayOfWeek.SUNDAY
+                || (today.getMonthValue() == 12 && today.getDayOfMonth() == 25);
     }
 }
