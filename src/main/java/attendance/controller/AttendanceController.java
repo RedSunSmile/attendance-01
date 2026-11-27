@@ -11,7 +11,9 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.TextStyle;
 import java.util.List;
+import java.util.Locale;
 
 public class AttendanceController {
     private final OutputView outputView = new OutputView();
@@ -92,11 +94,21 @@ public class AttendanceController {
         LocalDate today = DateTimes.now().toLocalDate();
         if (input.equals("1")) {
             if (AttendanceJudge.isNotSchoolDay(today)) {
-                throw new IllegalArgumentException("[ERROR] 12월 14일 토요일은 등교일이 아닙니다.");
+                throw new IllegalArgumentException("[ERROR] " +
+                        today.getMonthValue() + "월 " +
+                        today.getDayOfMonth() + "일 " +
+                        today.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.KOREAN) +
+                        "은 등교일이 아닙니다.");
             }
             String basket = inputView.inputNickName();
             crews.validNicknames(basket);
+            if (crews.findRecord(basket, today) != null) {
+                throw new IllegalArgumentException("[ERROR] 이미 출석을 확인하였습니다. 필요한 경우 수정 기능을 이용해 주세요.");
+            }
             LocalTime time = inputView.inputStartClassTime();
+            if (time.isBefore(LocalTime.of(8, 0)) || time.isAfter(LocalTime.of(23, 0))) {
+                throw new IllegalArgumentException("[ERROR] 캠퍼스 운영 시간에만 출석이 가능합니다.");
+            }
             LocalDateTime nowDate = LocalDateTime.of(today, time);
             outputView.printAttendance(nowDate, AttendanceJudge.judge(nowDate));
             crews.addRecord(basket, nowDate);
@@ -108,8 +120,19 @@ public class AttendanceController {
             String basket = inputView.inputModifyNickname();
             crews.validNicknames(basket);
             int day = inputView.inputModifyDay();
-            LocalTime time = inputView.inputModifyTime();
             LocalDate date = DateTimes.now().toLocalDate().withDayOfMonth(day);
+            if(AttendanceJudge.isNotSchoolDay(date)){
+                throw new IllegalArgumentException("[ERROR] " +
+                        date.getMonthValue() + "월 " +
+                        date.getDayOfMonth() + "일 " +
+                        date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.KOREAN) +
+                        "은 등교일이 아닙니다.");
+            }
+            if (day > DateTimes.now().getDayOfMonth()) {
+                throw new IllegalArgumentException("[ERROR] 아직 수정할 수 없습니다.");
+            }
+            LocalTime time = inputView.inputModifyTime();
+
             LocalDateTime oldRecord = crews.findRecord(basket, date);
 
             LocalDateTime nowDate = LocalDateTime.of(date, time);

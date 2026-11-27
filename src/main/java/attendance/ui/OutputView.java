@@ -18,15 +18,18 @@ public class OutputView {
     }
 
     public void printAttendance(LocalDateTime nowDate, String result) {
+        System.out.println();
         System.out.printf("%d월 %02d일 %s %s (%s)%n",
                 nowDate.getMonthValue(),
                 nowDate.getDayOfMonth(),
                 nowDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.KOREAN),
                 nowDate.toLocalTime(),
                 result);
+        System.out.println();
     }
 
     public void printModify(LocalDateTime oldRecord, String oldResult, LocalDateTime nowDate, String newResult) {
+        System.out.println();
         if (oldRecord == null) {
             System.out.printf("%d월 %02d일 %s --:-- (%s) -> %s (%s) 수정 완료!%n",
                     nowDate.getMonthValue(),
@@ -35,6 +38,7 @@ public class OutputView {
                     oldResult,
                     nowDate.toLocalTime(),
                     newResult);
+            System.out.println();
             return;
         }
         System.out.printf("%d월 %02d일 %s %s (%s) -> %s (%s) 수정 완료!%n",
@@ -45,19 +49,25 @@ public class OutputView {
                 oldResult,
                 nowDate.toLocalTime(),
                 newResult);
+        System.out.println();
     }
 
     public void printRecordTitle(String nickname) {
+        System.out.println();
         System.out.println("이번 달 " + nickname + "의 출석 기록입니다.");
+        System.out.println();
     }
 
     public void printCount(int attend, int late, int absent) {
+        System.out.println();
         System.out.println("출석: " + attend + "회");
         System.out.println("지각: " + late + "회");
         System.out.println("결석: " + absent + "회");
+        System.out.println();
     }
 
     public void printResultRiskCrew() {
+        System.out.println();
         System.out.println("제적 위험자 조회 결과");
     }
 
@@ -87,7 +97,9 @@ public class OutputView {
         if (judge.isEmpty()) {
             return;
         }
+        System.out.println();
         System.out.println(judge + " 대상자입니다.");
+        System.out.println();
     }
 
     public void selectFunction() {
